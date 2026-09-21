@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>日貫 デジタルツイン v3</title>
+<style>
+:root{ --bg:#0e1116; --pan:#161b22; --ln:#2b3340; --tx:#e6edf3; --dim:#9aa7b4; --ac:#4fc3f7; }
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--tx);
+  font-family:"Yu Gothic UI","Meiryo","Hiragino Kaku Gothic ProN",system-ui,sans-serif;
+  line-height:1.75;-webkit-font-smoothing:antialiased}
+.wrap{max-width:900px;margin:0 auto;padding:56px 20px 88px}
+h1{font-size:28px;margin:0 0 6px;letter-spacing:.01em}
+.lead{color:var(--dim);font-size:14.5px;margin:0 0 40px}
+h2{font-size:14px;color:var(--ac);letter-spacing:.06em;margin:44px 0 14px;
+  border-bottom:1px solid var(--ln);padding-bottom:7px;font-weight:600}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
+a.card{display:block;background:var(--pan);border:1px solid var(--ln);border-radius:12px;
+  padding:22px 22px 20px;text-decoration:none;color:inherit;transition:.15s}
+a.card:hover{border-color:var(--ac);transform:translateY(-2px)}
+a.card h3{margin:0 0 4px;font-size:17px}
+a.card .n{color:var(--ac);font-size:12px;letter-spacing:.08em;font-weight:700;display:block;margin-bottom:9px}
+a.card p{margin:0 0 12px;font-size:13px;color:var(--dim)}
+a.card .spec{font-size:12px;color:var(--tx);opacity:.85}
+a.card .spec b{color:var(--ac)}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0 4px}
+th,td{text-align:left;padding:7px 10px 7px 0;border-bottom:1px solid var(--ln);vertical-align:top}
+th{color:var(--dim);font-weight:600;white-space:nowrap}
+ul{margin:8px 0 0;padding-left:1.2em;font-size:13.5px}
+li{margin:5px 0}
+.note{background:#1a1f27;border-left:3px solid #ffa726;border-radius:0 8px 8px 0;
+  padding:14px 18px;font-size:13px;color:#cfd8dc;margin:18px 0}
+.note b{color:#ffb74d}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--ln);
+  font-size:12px;color:var(--dim)}
+code{background:#1a1f27;padding:1px 6px;border-radius:4px;font-size:12px}
+@media (max-width:600px){ .wrap{padding:32px 16px 64px} h1{font-size:22px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>日貫 デジタルツイン v3</h1>
+<p class="lead">島根県邑南町日貫地区。県の航空レーザー測量（0.5 m）にもとづく地形と、
+現地の計測を重ねて見るための試作です。ブラウザで開くだけで動きます（インストール不要・ネット接続不要）。</p>
+
+<div class="cards">
+  <a class="card" href="valley/">
+    <span class="n">0.5 m ／ 400 m 四方</span>
+    <h3>実験林の谷</h3>
+    <p>椿の植栽をしている斜面を、原本の粒のまま見る版。写真の点を押すと、その場で撮った写真が出ます。</p>
+    <div class="spec">地形 <b>641,601点</b>（0.5 m格子）／地表の絵 6枚 <b>0.195 m/px</b><br>
+      現地写真 <b>48点</b>／点群 <b>551,075点</b>（色つき）／土砂災害警戒区域 11面</div>
+  </a>
+  <a class="card" href="wide/">
+    <span class="n">2 m ／ 1.5 km 四方</span>
+    <h3>広域（地区全体）</h3>
+    <p>雨を粒で降らせて流れを追う版に、微地形の区分を足したもの。地区の全体像はこちら。</p>
+    <div class="spec">全域 10 m ＋ 詳細窓 <b>2 m・564,001点</b>／地表の絵 8枚<br>
+      雨のシミュレーション／管理断面の流量・水深／微テラス候補 248件</div>
+  </a>
+</div>
+
+<h2>何が見えるか</h2>
+<table>
+<tr><th>地形そのもの</th><td>多方向陰影・傾斜量図・CS立体図相当・赤色立体図近似（開度）。0.5 m の版では、作業道・段・掘り込みがそのまま出ます</td></tr>
+<tr><th>微地形の区分</th><td>①凹地・集水線／②凸地・尾根／③直線斜面／④微テラス の4区分。固定した閾値で機械的に分けています（判定に生成AIは使っていません）</td></tr>
+<tr><th>水</th><td>流路（集水面積 0.5 ha 以上）・0次谷の谷頭。広域版では雨の強さと継続時間を変えて流下を追えます</td></tr>
+<tr><th>災害の区域</th><td>土砂災害警戒区域（急傾斜地の崩壊・土石流）。国土数値情報 A33</td></tr>
+<tr><th>現地の計測</th><td>2026-08-19 の現地調査の写真と位置、地上計測の点群（色つき）、椿苗床の区画</td></tr>
+</table>
+
+<h2>数字の扱い</h2>
+<div class="note">
+<b>この画面の数値は検証中のものです。</b>
+微テラスは<b>候補</b>で、偽陽性が混ざります（古い道や作業道の盛土が微テラスに見えます）。
+点群の位置は、県の0.5 m 標高データとセルごとの最低点で突き合わせ、<b>中央値 −0.13 m</b> で合っていることを確かめてありますが、
+写真の位置はスマートフォンのGNSSで、林の中では 10 m 程度の誤差があります。
+椿苗床の区画は、記録されている標高が県の標高データと <b>11〜21 m</b> 食い違っており、原因が未確定です。
+現地で確かめる前提の試作としてご覧ください。
+</div>
+
+<h2>出どころ</h2>
+<ul>
+<li>地形（0.5 m DTM・樹冠高）＝島根県提供の航空レーザー測量データ。<b>用途は学術利用</b></li>
+<li>土砂災害警戒区域＝国土数値情報 A33／建物・道路＝国土地理院ベクトルタイル／地質＝産総研 20万分の1日本シームレス地質図V2</li>
+<li>雨量＝気象庁アメダス（瑞穂）／現地写真・地上計測の点群・椿苗床の区画＝現地調査および関係者提供</li>
+<li>座標系はすべて <code>EPSG:6671</code>（JGD2011 平面直角座標系 第Ⅲ系）、標高は T.P.</li>
+</ul>
+
+<h2>作りかた</h2>
+<ul>
+<li>単一のHTMLファイルに、標高・地表の絵・点群をすべて埋め込んであります。<b>外部から読み込むものはありません</b></li>
+<li>3D描画は three.js r160（同梱）</li>
+<li>谷の版 16.1 MB ／ 広域の版 19.4 MB。回線の細いところでは開くまで少し時間がかかります</li>
+</ul>
+
+<footer>
+株式会社エブリプラン 事業創発室　｜　2026-09-21 公開<br>
+このページは検索エンジンの巡回を止めていますが、<b>URLを知っていれば誰でも開けます</b>。
+</footer>
+
+</div>
+</body>
+</html>
