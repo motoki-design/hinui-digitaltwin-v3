@@ -1,4 +1,5 @@
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>邑南町日貫地区 デジタルツイン試作</title>
 <style>
   :root{
@@ -68,6 +69,27 @@
     font-size:11px;padding:2px 7px;border-radius:5px;background:rgba(10,14,19,.86);
     border:1px solid var(--line)}
 </style>
+<style id="mobile-patch">
+/* ★スマホ（幅720px以下）：固定パネルを「下のシート」にし、既定は畳む。地形が画面全体に出る */
+@media (max-width:720px){
+  .panel{left:8px!important;right:8px!important;width:auto!important;max-width:none!important;
+         transform:none!important}
+  #left,#right,#sec,#info{top:auto!important;bottom:56px!important;max-height:42vh!important;
+    display:none;padding:10px 12px!important}
+  #left.open,#right.open,#sec.open,#info.open{display:block!important}
+  #bottom{bottom:56px!important;width:auto!important;padding:8px 10px!important;display:none}
+  #bottom.open{display:block!important}
+  #hint{display:none!important}
+  #mtabs{position:fixed;left:0;right:0;bottom:0;height:48px;display:flex;gap:4px;padding:6px 8px;
+    background:rgba(14,17,22,.94);border-top:1px solid #2b3340;z-index:30}
+  #mtabs button{flex:1;margin:0;padding:6px 2px;font-size:12px;border-radius:8px;
+    background:#1f2630;color:#e6edf3;border:1px solid #2b3340;font-family:inherit}
+  #mtabs button.on{background:#4fc3f7;color:#0b1117;font-weight:700}
+  h1{font-size:14px!important}
+}
+@media (min-width:721px){ #mtabs{display:none} }
+</style>
+
 
 <div id="app"></div>
 <div id="load"><div style="text-align:center">
@@ -1698,4 +1720,47 @@ function animate(ts){
   scalePins();                                 // ピンの画面上の大きさを一定に保つ
   rend.render(scene, cam);
 }
+</script>
+<script id="mobile-patch-js">
+(function(){
+  /* 狭い画面でだけ、下のタブでパネルを1枚ずつ開く。デスクトップでは何もしない */
+  var tabs=[["left","設定"],["right","雨"],["sec","断面"],["bottom","時間"],["info","詳細"]];
+  var bar=document.createElement("div"); bar.id="mtabs";
+  var have=[];
+  function closeAll(){
+    have.forEach(function(id){ document.getElementById(id).classList.remove("open"); });
+    bar.querySelectorAll("button").forEach(function(x){ x.classList.remove("on"); });
+  }
+  tabs.forEach(function(t){
+    var el=document.getElementById(t[0]); if(!el) return;
+    have.push(t[0]);
+    var b=document.createElement("button"); b.textContent=t[1]; b.dataset.p=t[0];
+    b.onclick=function(){
+      var on=el.classList.contains("open");
+      closeAll();
+      if(!on){ el.classList.add("open"); b.classList.add("on"); }
+      window.dispatchEvent(new Event("resize"));
+    };
+    bar.appendChild(b);
+  });
+  var m=document.createElement("button"); m.textContent="地形";
+  m.onclick=function(){ closeAll(); };
+  bar.insertBefore(m, bar.firstChild);
+  document.body.appendChild(bar);
+  /* 点をクリックして詳細が出たとき（谷ビューア）はスマホでも前に出す。
+     ★閉じたときに .open を外さないと、!important が効いて閉じられない */
+  var info=document.getElementById("info");
+  if(info){
+    new MutationObserver(function(){
+      var shown = info.style.display === "block";
+      if(shown && window.innerWidth<=720){
+        closeAll(); info.classList.add("open");
+        var btn=bar.querySelector('button[data-p="info"]'); if(btn) btn.classList.add("on");
+      } else if(!shown){
+        info.classList.remove("open");
+        var b2=bar.querySelector('button[data-p="info"]'); if(b2) b2.classList.remove("on");
+      }
+    }).observe(info,{attributes:true,attributeFilter:["style"]});
+  }
+})();
 </script>
